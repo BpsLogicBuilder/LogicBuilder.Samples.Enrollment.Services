@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>2533392a-1db2-41f2-9368-138b6cc36ae0</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.0" />
+		<PackageReference Include="LogicBuilder.App.Bsl.Business" Version="1.0.3" />
+		<PackageReference Include="LogicBuilder.App.Utils" Version="1.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.1-preview.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Enrollment.Domain\Enrollment.Domain.csproj" /><!--Required for serialization-->
+  </ItemGroup>
+
+</Project>

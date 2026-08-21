@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="Enrollment.Api/Enrollment.Api.csproj" Id="b404b8f8-d620-4c48-9116-0f96693edfcc" />
+  </Folder>
+  <Folder Name="/BSL/">
+    <Project Path="Enrollment.BSL.AutoMapperProfiles/Enrollment.BSL.AutoMapperProfiles.csproj" />
+    <Project Path="Enrollment.Bsl.Flow/Enrollment.Bsl.Flow.csproj" />
+    <Project Path="Enrollment.Bsl/Enrollment.Bsl.csproj" Id="979f4400-0e8b-4a97-af21-1fcbbbd9fe44" />
+  </Folder>
+  <Folder Name="/Business/">
+    <Project Path="Enrollment.Domain/Enrollment.Domain.csproj" />
+    <Project Path="Enrollment.Repositories/Enrollment.Repositories.csproj" />
+  </Folder>
+  <Folder Name="/EF/">
+    <Project Path="Enrollment.Contexts/Enrollment.Contexts.csproj" />
+    <Project Path="Enrollment.Data/Enrollment.Data.csproj" />
+    <Project Path="Enrollment.Stores/Enrollment.Stores.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Enrollment.Api.Tests/Enrollment.Api.Tests.csproj" Id="55d42632-b119-4dcf-9980-9bea22fc40f0" />
+    <Project Path="Enrollment.Bsl.Flow.Tests/Enrollment.Bsl.Flow.Tests.csproj" Id="6a7b8138-e4eb-4061-b271-76a1109751d8" />
+    <Project Path="Enrollment.Bsl.Tests/Enrollment.Bsl.Tests.csproj" Id="4cd1910e-f183-4228-8999-a0cffd912617" />
+  </Folder>
+  <Folder Name="/_Solution Items/">
+    <File Path="CHANGELOG.md" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

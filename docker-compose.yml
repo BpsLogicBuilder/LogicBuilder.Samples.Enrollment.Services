@@ -1,0 +1,15 @@
+services:
+  enrollment.api:
+    image: ${DOCKER_REGISTRY-}enrollmentapi
+    build:
+      context: .
+      dockerfile: Enrollment.Api/Dockerfile
+    depends_on:
+      - enrollment.bsl
+
+  enrollment.bsl:
+    image: ${DOCKER_REGISTRY-}enrollmentbsl
+    build:
+      context: .
+      dockerfile: Enrollment.Bsl/Dockerfile
+

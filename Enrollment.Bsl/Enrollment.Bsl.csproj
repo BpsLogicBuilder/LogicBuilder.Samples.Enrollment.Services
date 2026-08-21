@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>c98bc07a-d3f0-48a9-86f3-28914138fc74</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+		<PackageReference Include="LogicBuilder.DataContracts" Version="2.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="10.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.1-preview.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Enrollment.BSL.AutoMapperProfiles\Enrollment.BSL.AutoMapperProfiles.csproj" />
+    <ProjectReference Include="..\Enrollment.Bsl.Flow\Enrollment.Bsl.Flow.csproj" />
+  </ItemGroup>
+
+</Project>
