@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -72,7 +73,8 @@ namespace Microsoft.Extensions.DependencyInjection
                         var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
                         string expectedThumbprint = builder.Configuration["ExpectedCerificateThumbprint"] ?? "";
 
-                        if (certificate.Thumbprint.Equals(expectedThumbprint, StringComparison.OrdinalIgnoreCase))
+                        if (certificate.Thumbprint.Equals(expectedThumbprint, StringComparison.OrdinalIgnoreCase)
+                            || ConvertFromHexToBase64(certificate.Thumbprint).Equals(expectedThumbprint, StringComparison.Ordinal))
                         {
                             if (logger.IsEnabled(LogLevel.Information))
                             {
@@ -112,14 +114,22 @@ namespace Microsoft.Extensions.DependencyInjection
                 };
             });
 
-            // Configure Kestrel to require client certificates
-            builder.WebHost.ConfigureKestrel(serverOptions =>
+            // Configure Kestrel to allow client certificates
+            if (builder.Environment.IsDevelopment())
             {
-                serverOptions.ConfigureHttpsDefaults(httpsOptions =>
-                {//default is NoCertificate which causes failures when a certificate is sent.
-                    httpsOptions.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
+                builder.WebHost.ConfigureKestrel(serverOptions =>
+                {
+                    serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+                    {//default is NoCertificate which causes failures when a certificate is sent.
+                        httpsOptions.ClientCertificateMode = ClientCertificateMode.AllowCertificate;
+                        httpsOptions.ClientCertificateValidation = (cert, chain, errors) =>
+                        {// FORCE Kestrel to accept the certificate at the TLS level, even if untrusted
+                            // Return true to allow the TLS handshake to succeed regardless of trust errors
+                            return true;
+                        };
+                    });
                 });
-            });
+            }
 
             return services;
         }
@@ -138,6 +148,11 @@ namespace Microsoft.Extensions.DependencyInjection
                             //so the policy should return true for http - useful when using http in development.
 
             return httpContext?.Request.Scheme == "https" && context.User?.Identity?.IsAuthenticated == true;
+        }
+
+        private static string ConvertFromHexToBase64(string hexString)
+        {
+            return Convert.ToBase64String(Convert.FromHexString(hexString));
         }
     }
 }

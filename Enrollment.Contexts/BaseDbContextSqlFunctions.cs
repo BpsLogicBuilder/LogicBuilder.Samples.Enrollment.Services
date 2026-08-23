@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Enrollment.Contexts
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class BaseDbContextSqlFunctions
     {
 #pragma warning disable IDE0060//method signature is required for database translation
@@ -16,13 +17,13 @@ namespace Enrollment.Contexts
         {
             modelBuilder.HasDbFunction
             (
-                typeof(BaseDbContextSqlFunctions).GetMethod(nameof(FormatDateTime), [typeof(DateTime), typeof(string), typeof(string)])!//FormatDateTime exists
+                typeof(BaseDbContextSqlFunctions).GetMethod(nameof(FormatDateTime), [typeof(DateTime), typeof(string), typeof(string)])!//NOSOSNAR FormatDateTime exists
             )
             .HasTranslation(Transalate);
 
             modelBuilder.HasDbFunction
             (
-                typeof(BaseDbContextSqlFunctions).GetMethod(nameof(FormatDecimal), [typeof(decimal), typeof(string), typeof(string)])!// FormatDecimal exists
+                typeof(BaseDbContextSqlFunctions).GetMethod(nameof(FormatDecimal), [typeof(decimal), typeof(string), typeof(string)])!//NOSOSNAR FormatDecimal exists
             )
             .HasTranslation(Transalate);
         }

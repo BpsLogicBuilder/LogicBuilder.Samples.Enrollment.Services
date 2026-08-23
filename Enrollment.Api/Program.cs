@@ -4,6 +4,7 @@ using Enrollment.Api;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 
@@ -35,7 +36,7 @@ builder.Services.AddControllers().AddJsonOptions
     }
 );
 
-var certificateClient = new CertificateClient(new Uri(builder.Configuration["keyVaultUrl"]!), new DefaultAzureCredential());
+var certificateClient = new CertificateClient(new Uri(builder.Configuration["keyVaultUrl"] ?? throw new InvalidOperationException("keyVaultUrl is required")), new DefaultAzureCredential());
 var certificate = await certificateClient.DownloadCertificateAsync(builder.Configuration["bslCertificateName"]);
 
 builder.Services.AddHttpClient(HttpClientOptions.BslClientName, client =>
@@ -45,7 +46,12 @@ builder.Services.AddHttpClient(HttpClientOptions.BslClientName, client =>
 .ConfigurePrimaryHttpMessageHandler(() =>
 {
     var handler = new HttpClientHandler();
-    handler.ClientCertificates.Add(certificate.Value);
+    if (certificate?.Value != null)
+        handler.ClientCertificates.Add(certificate.Value);
+
+    if (builder.Environment.IsDevelopment())
+        handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator!;
+
     return handler;
 });
 
@@ -65,3 +71,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+public partial class Program
+{
+    protected Program() { }
+}

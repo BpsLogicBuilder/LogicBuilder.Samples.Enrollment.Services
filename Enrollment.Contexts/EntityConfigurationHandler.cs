@@ -41,7 +41,7 @@ namespace Enrollment.Contexts
             (
                 t =>
                 {
-                    MethodInfo mi = t.GetMethod(nameof(Configuations.ITableConfiguration.Configure))!;//ITableConfiguration implements Configure
+                    MethodInfo mi = t.GetMethod(nameof(Configuations.ITableConfiguration.Configure))!;//NOSOSNAR ITableConfiguration implements Configure
                     mi.Invoke(Activator.CreateInstance(t), [modelBuilder]);
                 }
             );

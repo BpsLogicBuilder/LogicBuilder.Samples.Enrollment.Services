@@ -22,7 +22,11 @@
     <Project Path="Enrollment.Bsl.Tests/Enrollment.Bsl.Tests.csproj" Id="4cd1910e-f183-4228-8999-a0cffd912617" />
   </Folder>
   <Folder Name="/_Solution Items/">
+    <File Path=".github/workflows/cd.yml" />
+    <File Path=".github/workflows/check-for-ab-number.yml" />
+    <File Path=".github/workflows/ci.yml" />
     <File Path="CHANGELOG.md" />
+    <File Path="README.md" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

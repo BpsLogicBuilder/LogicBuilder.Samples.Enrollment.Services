@@ -20,15 +20,15 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_ImmigrationStatus")]
-		public string ImmigrationStatus { get; set; } = "";
+		public string? ImmigrationStatus { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_CountryOfCitizenship")]
-		public string CountryOfCitizenship { get; set; } = "";
+		public string? CountryOfCitizenship { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_ResidentState")]
-		public string ResidentState { get; set; } = "";
+		public string? ResidentState { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_HasValidDriversLicense")]
@@ -36,11 +36,11 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_DriversLicenseState")]
-		public string DriversLicenseState { get; set; } = "";
+		public string? DriversLicenseState { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Residency_DriversLicenseNumber")]
-		public string DriversLicenseNumber { get; set; } = "";
+		public string? DriversLicenseNumber { get; set; }
 
         [ListEditorControl(ListControlType.HashSetForm)]
 		[AlsoKnownAs("Residency_StatesLivedIn")]

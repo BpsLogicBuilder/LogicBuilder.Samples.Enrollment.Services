@@ -4,7 +4,7 @@ namespace Enrollment.Contexts
 {
     public abstract class BaseDbContext : DbContext
     {
-        public BaseDbContext(DbContextOptions options) : base(options)
+        protected BaseDbContext(DbContextOptions options) : base(options)
         {
             this.EntityConfigurationHandler = new EntityConfigurationHandler(this);
         }
