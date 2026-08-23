@@ -1,3 +1,4 @@
+* 2026-08-23 - AB#197: Adding CI/CD workflows and API tests.
 * 2026-08-22 - AB#197: - API tests working with HTTPS.
 * 2026-08-21 - AB#197: - Add API and API test project.
 * 2026-08-21 - AB#197: - Add BSL and BSL tests.

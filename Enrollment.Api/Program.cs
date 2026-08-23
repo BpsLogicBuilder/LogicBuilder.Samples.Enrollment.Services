@@ -36,7 +36,7 @@ builder.Services.AddControllers().AddJsonOptions
     }
 );
 
-var certificateClient = new CertificateClient(new Uri(builder.Configuration["keyVaultUrl"]!), new DefaultAzureCredential());
+var certificateClient = new CertificateClient(new Uri(builder.Configuration["keyVaultUrl"] ?? throw new InvalidOperationException("keyVaultUrl is required")), new DefaultAzureCredential());
 var certificate = await certificateClient.DownloadCertificateAsync(builder.Configuration["bslCertificateName"]);
 
 builder.Services.AddHttpClient(HttpClientOptions.BslClientName, client =>
@@ -71,3 +71,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+public partial class Program
+{
+    protected Program() { }
+}
