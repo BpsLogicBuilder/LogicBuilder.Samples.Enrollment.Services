@@ -68,7 +68,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
 
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Convert coverage to Cobertura
+        run: dotnet-coverage merge ./TestResults/coverage.xml --output-format cobertura --output ./TestResults/coverage.cobertura.xml
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./TestResults/coverage.cobertura.xml

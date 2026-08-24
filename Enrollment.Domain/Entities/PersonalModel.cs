@@ -20,7 +20,7 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_MiddleName")]
-		public string MiddleName { get; set; } = "";
+		public string? MiddleName { get; set; }
 
         public string FullName { get; set; } = "";
 
@@ -30,7 +30,7 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_Suffix")]
-		public string Suffix { get; set; } = "";
+		public string? Suffix { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_Address1")]
@@ -38,7 +38,7 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_Address2")]
-		public string Address2 { get; set; } = "";
+		public string? Address2 { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_City")]
@@ -46,11 +46,11 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_State")]
-		public string State { get; set; } = "";
+		public string? State { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_County")]
-		public string County { get; set; } = "";
+		public string? County { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_ZipCode")]
@@ -58,14 +58,14 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_CellPhone")]
-		public string CellPhone { get; set; } = "";
+		public string? CellPhone { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_OtherPhone")]
-		public string OtherPhone { get; set; } = "";
+		public string? OtherPhone { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Personal_PrimaryEmail")]
-		public string PrimaryEmail { get; set; } = "";
+		public string? PrimaryEmail { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Enrollment.Data.Entities
 
         public string ListName { get; set; } = "";
 
-        public string Value { get; set; } = "";
+        public string? Value { get; set; }
 
         public double? NumericValue { get; set; }
 

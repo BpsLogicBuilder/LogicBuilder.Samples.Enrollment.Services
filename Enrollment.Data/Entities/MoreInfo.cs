@@ -15,13 +15,13 @@
 
         public bool IsVeteran { get; set; }
 
-        public string MilitaryStatus { get; set; } = "";
+        public string? MilitaryStatus { get; set; }
 
-        public string MilitaryBranch { get; set; } = "";
+        public string? MilitaryBranch { get; set; }
 
-        public string VeteranType { get; set; } = "";
+        public string? VeteranType { get; set; }
 
-        public string GovernmentBenefits { get; set; } = "";
+        public string? GovernmentBenefits { get; set; }
         #endregion Properties
     }
 }

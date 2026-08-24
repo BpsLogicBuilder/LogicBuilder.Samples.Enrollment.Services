@@ -20,7 +20,7 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("LookUps_Value")]
-		public string Value { get; set; } = "";
+		public string? Value { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("LookUps_NumericValue")]

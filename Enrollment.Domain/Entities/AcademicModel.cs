@@ -20,15 +20,15 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_NcHighSchoolName")]
-		public string NcHighSchoolName { get; set; } = "";
+		public string? NcHighSchoolName { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_HomeSchoolType")]
-		public string HomeSchoolType { get; set; } = "";
+		public string? HomeSchoolType { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_HomeSchoolAssociation")]
-		public string HomeSchoolAssociation { get; set; } = "";
+		public string? HomeSchoolAssociation { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_FromDate")]
@@ -48,7 +48,7 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_GedLocation")]
-		public string GedLocation { get; set; } = "";
+		public string? GedLocation { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Academic_GedDate")]

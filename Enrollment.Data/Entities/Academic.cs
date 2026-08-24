@@ -17,11 +17,11 @@ namespace Enrollment.Data.Entities
 
         public string LastHighSchoolLocation { get; set; } = "";
 
-        public string NcHighSchoolName { get; set; } = "";
+        public string? NcHighSchoolName { get; set; }
 
-        public string HomeSchoolType { get; set; } = "";
+        public string? HomeSchoolType { get; set; }
 
-        public string HomeSchoolAssociation { get; set; } = "";
+        public string? HomeSchoolAssociation { get; set; }
 
         public DateTime FromDate { get; set; }
 
@@ -31,7 +31,7 @@ namespace Enrollment.Data.Entities
 
         public bool? ReceivedGed { get; set; }
  
-        public string GedLocation { get; set; } = "";
+        public string? GedLocation { get; set; }
 
         public DateTime? GedDate { get; set; }
 

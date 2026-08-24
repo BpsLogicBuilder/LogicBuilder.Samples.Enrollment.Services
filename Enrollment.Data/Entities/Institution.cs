@@ -15,11 +15,11 @@ namespace Enrollment.Data.Entities
 
         public string InstitutionName { get; set; } = "";
 
-        public string StartYear { get; set; } = "";
+        public string? StartYear { get; set; }
 
-        public string EndYear { get; set; } = "";
+        public string? EndYear { get; set; }
 
-        public string HighestDegreeEarned { get; set; } = "";
+        public string? HighestDegreeEarned { get; set; }
 
         public DateTime? MonthYearGraduated { get; set; }
 
