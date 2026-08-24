@@ -6,7 +6,7 @@ namespace Enrollment.Data.Entities
     {
         public int UserId { get; set; }
 
-        public string UserName { get; set; } = "";
+        public string? UserName { get; set; }
         public Personal? Personal { get; set; }
         public Academic? Academic { get; set; }
         public Admissions? Admissions { get; set; }

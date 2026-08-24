@@ -19,15 +19,15 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
         [AlsoKnownAs("ContactInfo_FormerFirstName")]
-        public string FormerFirstName { get; set; } = "";
+        public string? FormerFirstName { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
         [AlsoKnownAs("ContactInfo_FormerMiddleName")]
-        public string FormerMiddleName { get; set; } = "";
+        public string? FormerMiddleName { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
         [AlsoKnownAs("ContactInfo_FormerLastName")]
-        public string FormerLastName { get; set; } = "";
+        public string? FormerLastName { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
         [AlsoKnownAs("ContactInfo_DateOfBirth")]

@@ -12,7 +12,7 @@ namespace Enrollment.Domain.Entities
 
 		[VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("User_UserName")]
-		public string UserName { get; set; } = "";
+		public string? UserName { get; set; }
 
 		[AlsoKnownAs("User_Personal")]
 		public PersonalModel? Personal { get; set; }

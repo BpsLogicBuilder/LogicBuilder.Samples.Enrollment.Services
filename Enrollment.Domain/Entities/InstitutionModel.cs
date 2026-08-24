@@ -23,15 +23,15 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Institution_StartYear")]
-		public string StartYear { get; set; } = "";
+		public string? StartYear { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Institution_EndYear")]
-		public string EndYear { get; set; } = "";
+		public string? EndYear { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Institution_HighestDegreeEarned")]
-		public string HighestDegreeEarned { get; set; } = "";
+		public string? HighestDegreeEarned { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("Institution_MonthYearGraduated")]

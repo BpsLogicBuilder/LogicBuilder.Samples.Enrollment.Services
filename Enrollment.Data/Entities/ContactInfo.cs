@@ -13,11 +13,11 @@ namespace Enrollment.Data.Entities
 
         public bool HasFormerName { get; set; }
 
-        public string FormerFirstName { get; set; } = "";
+        public string? FormerFirstName { get; set; }
 
-        public string FormerMiddleName { get; set; } = "";
+        public string? FormerMiddleName { get; set; }
 
-        public string FormerLastName { get; set; } = "";
+        public string? FormerLastName { get; set; }
 
         public DateTime DateOfBirth { get; set; }
 

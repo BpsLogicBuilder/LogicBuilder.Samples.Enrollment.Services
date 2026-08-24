@@ -27,18 +27,18 @@ namespace Enrollment.Domain.Entities
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("MoreInfo_MilitaryStatus")]
-		public string MilitaryStatus { get; set; } = "";
+		public string? MilitaryStatus { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("MoreInfo_MilitaryBranch")]
-		public string MilitaryBranch { get; set; } = "";
+		public string? MilitaryBranch { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("MoreInfo_VeteranType")]
-		public string VeteranType { get; set; } = "";
+		public string? VeteranType { get; set; }
 
         [VariableEditorControl(VariableControlType.SingleLineTextBox)]
 		[AlsoKnownAs("MoreInfo_GovernmentBenefits")]
-		public string GovernmentBenefits { get; set; } = "";
+		public string? GovernmentBenefits { get; set; }
     }
 }
