@@ -1,11 +1,11 @@
-﻿using LogicBuilder.RulesDirector;
+﻿using LogicBuilder.App.Bsl.Utils.Interfaces;
+using LogicBuilder.RulesDirector;
 using System;
 
 namespace Enrollment.Bsl.Flow.Interfaces
 {
     public interface IFlowManager
     {
-        ICustomActions CustomActions { get; }
         DirectorBase Director { get; }
         IFlowActivity FlowActivity { get; }
         IFlowDataCache FlowDataCache { get; }

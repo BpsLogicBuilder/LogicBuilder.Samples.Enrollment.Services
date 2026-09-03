@@ -39,9 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddTransient<IEnrollmentStore, EnrollmentStore>()
                 .AddTransient<IContextRepository, EnrollmentRepository>()
                 .AddTransient<IEnrollmentRepository, EnrollmentRepository>()
-                .AddTransient<ICustomActions, CustomActions>()
                 .AddTransient<IFlowManager, FlowManager>()
-                .AddScoped<IFlowDataCache, FlowDataCache>()
                 .AddScoped<Progress>();
         }
     }

@@ -58,10 +58,12 @@ jobs:
         run: |
           dotnet test Enrollment.Bsl.Flow.Tests/Enrollment.Bsl.Flow.Tests.csproj \
           --verbosity normal --configuration Release \
-          --coverage --results-directory ./TestResults/ \
-          /p:GraphQLCodeCoverageFilters="-Module%3B[*Enrollment.Api]*" \
-          /p:GraphQLCodeCoverageFilters="-Attribute%3B[.*]..*GeneratedCodeAttribute.*" \
-          -- --coverage-output-format xml --coverage-output coverage.xml
+          --results-directory ./TestResults/ \
+          -- \
+          --coverage \
+          --coverage-settings CodeCoverage.runsettings \
+          --coverage-output-format xml \
+          --coverage-output coverage.xml
 
       - name: End SonarQube Cloud analysis
         env:
@@ -79,3 +81,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./TestResults/coverage.cobertura.xml
+          disable_search: true

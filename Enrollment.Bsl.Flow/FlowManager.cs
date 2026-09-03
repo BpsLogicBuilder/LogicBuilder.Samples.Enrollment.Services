@@ -1,6 +1,7 @@
 ﻿using Enrollment.Bsl.Flow.Factories;
 using Enrollment.Bsl.Flow.Interfaces;
 using LogicBuilder.App.Bsl.Business.Responses;
+using LogicBuilder.App.Bsl.Utils.Interfaces;
 using LogicBuilder.RulesDirector;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,7 +12,6 @@ namespace Enrollment.Bsl.Flow
     public class FlowManager : IFlowManager
     {
         public FlowManager(
-            ICustomActions customActions,
             IFlowDataCache flowDataCache,
             IFlowFactory flowFactory,
             ILogger<FlowManager> logger,
@@ -20,7 +20,6 @@ namespace Enrollment.Bsl.Flow
             IServiceProvider serviceProvider)
         {
             _logger = logger;
-            CustomActions = customActions;
             FlowDataCache = flowDataCache;
             Progress = progress;
             RulesCache = rulesCache;
@@ -30,8 +29,6 @@ namespace Enrollment.Bsl.Flow
         }
 
         private readonly ILogger<FlowManager> _logger;
-
-        public ICustomActions CustomActions { get; }
 
         public DirectorBase Director { get; }
 

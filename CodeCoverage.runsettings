@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="code coverage">
+        <Configuration>
+          <CodeCoverage>
+            <ModulePaths>
+              <Exclude>
+								<ModulePath>.*Enrollment\.Api\.dll$</ModulePath>
+              </Exclude>
+            </ModulePaths>
+						<Attributes>
+							<Exclude>
+								<Attribute>^System\\.CodeDom\\.Compiler\\.GeneratedCodeAttribute$</Attribute>
+							</Exclude>
+						</Attributes>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
