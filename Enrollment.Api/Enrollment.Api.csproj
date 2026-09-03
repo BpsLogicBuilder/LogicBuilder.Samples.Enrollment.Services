@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.0" />
+		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.1" />
 		<PackageReference Include="LogicBuilder.App.Bsl.Business" Version="1.0.3" />
 		<PackageReference Include="LogicBuilder.App.Utils" Version="1.0.7" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.1-preview.1" />
