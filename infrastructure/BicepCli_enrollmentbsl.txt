@@ -1,0 +1,6 @@
+$rg = "rg-enrollment"
+$acrName="enrollacrkqgs34eylclic"
+$imageTag="v1.0.0"
+
+az acr build --registry $acrName --image "enrollmentbsl:${imageTag}" --image enrollmentbsl:latest --file ./Enrollment.Bsl/Dockerfile .
+az deployment group create --resource-group $rg --template-file infrastructure/enrollmentbsl.bicep --parameters imageTag="$imageTag" dbConnectionString='' expectedCerificateThumbprint=""

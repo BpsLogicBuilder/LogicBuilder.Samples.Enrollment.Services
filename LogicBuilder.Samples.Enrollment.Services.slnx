@@ -16,6 +16,12 @@
     <Project Path="Enrollment.Data/Enrollment.Data.csproj" />
     <Project Path="Enrollment.Stores/Enrollment.Stores.csproj" />
   </Folder>
+  <Folder Name="/Infra/">
+    <File Path="infrastructure/BicepCli_enrollmentapi.txt" />
+    <File Path="infrastructure/BicepCli_enrollmentbsl.txt" />
+    <File Path="infrastructure/enrollmentapi.bicep" />
+    <File Path="infrastructure/enrollmentbsl.bicep" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="Enrollment.Api.Tests/Enrollment.Api.Tests.csproj" Id="55d42632-b119-4dcf-9980-9bea22fc40f0" />
     <Project Path="Enrollment.Bsl.Flow.Tests/Enrollment.Bsl.Flow.Tests.csproj" Id="6a7b8138-e4eb-4061-b271-76a1109751d8" />
