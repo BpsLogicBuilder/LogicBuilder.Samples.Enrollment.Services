@@ -6,7 +6,9 @@
 **/.project
 **/.settings
 **/.toolstarget
-**/.vs
+.vs/
+**/.vs/
+.vs
 **/.vscode
 **/*.*proj.user
 **/*.dbmdl
@@ -24,6 +26,7 @@
 LICENSE
 README.md
 !**/.gitignore
+!**/Dockerfile
 !.git/HEAD
 !.git/config
 !.git/packed-refs
