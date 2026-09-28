@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enrollment-bsl
+  namespace: ENROLLMENT_APP_NAMESPACE
+  labels:
+    app: enrollment-bsl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: enrollment-bsl
+  template:
+    metadata:
+      labels:
+        app: enrollment-bsl
+    spec:
+      nodeSelector:
+        workload: apps
+      automountServiceAccountToken: false
+      serviceAccountName: ENROLLMENT_BSL_SERVICEACCOUNT_NAME
+      containers:
+      - name: enrollment-bsl
+        image: ACR_NAME.azurecr.io/enrollmentbsl:IMAGE_TAG
+        ports:
+        - containerPort: 8080
+        env:
+        - name: APPLICATION_CONFIGURATION_ENDPOINT
+          value: "APP_CONFIG_ENDPOINT"
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-connection-string
+        - name: ExpectedCerificateThumbprint
+          value: "EXPECTED_CERTIFICATE_THUMBPRINT"
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+            ephemeral-storage: "512Mi"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /weatherforecast
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /weatherforecast
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5

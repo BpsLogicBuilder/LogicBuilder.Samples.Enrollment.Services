@@ -1,0 +1,225 @@
+on: [workflow_dispatch]
+name: Deploy Services to AKS
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  NODE_VERSION: "22.x"
+  PROJECT_NAME: "LogicBuilder.Samples.Enrollment.Services"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          java-version: 25
+          distribution: 'temurin'
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: https://nuget.pkg.github.com/bpsLogicBuilder/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+
+      - name: Install SonarQube Cloud scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Begin SonarQube Cloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: "${{ format('BpsLogicBuilder_{0}', env.PROJECT_NAME) }}"
+          SONAR_ORGANIZATION_KEY: "bpslogicbuilder"
+        run: |
+          dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.SONAR_ORGANIZATION_KEY }}" /d:sonar.qualitygate.wait=true /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.cs.vscoveragexml.reportsPaths="**/TestResults/coverage.xml" /d:sonar.coverage.exclusions="**/Enrollment.Api/**"
+
+      - name: Run unit tests
+        run: |
+          dotnet test Enrollment.Bsl.Flow.Tests/Enrollment.Bsl.Flow.Tests.csproj \
+          --verbosity normal --configuration Release \
+          --results-directory ./TestResults/ \
+          -- \
+          --coverage \
+          --coverage-settings CodeCoverage.runsettings \
+          --coverage-output-format xml \
+          --coverage-output coverage.xml
+
+      - name: End SonarQube Cloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
+
+  deploy-api-service:
+    name: Deploy API Service
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'BpsLogicBuilder'
+    permissions:
+      id-token: write
+      contents: read
+    needs: test
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+      with:
+        client-id: ${{ secrets.ARM_DEPLOYER_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Get Deployment Outputs
+      id: get_deployment_outpots
+      env:
+        RESOURCE_GROUP: ${{ secrets.AZURE_RG_ENROLLMENT_AKS }}
+      run: |
+          ACR_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.acrName.value -o tsv)
+          echo "::add-mask::$ACR_NAME"
+
+          APP_CONFIG_ENDPOINT=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.appConfigurationEndPoint.value -o tsv)
+          echo "::add-mask::$APP_CONFIG_ENDPOINT"
+
+          AKS_CLUSTER_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.aksClusterName.value -o tsv)
+          echo "::add-mask::$AKS_CLUSTER_NAME"
+
+          ENROLLMENT_APP_NAMESPACE=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.kubernetesNamespace.value -o tsv)
+          echo "::add-mask::$ENROLLMENT_APP_NAMESPACE"
+
+          ENROLLMENT_API_SERVICEACCOUNT_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.enrollmentApiServiceAccountName.value -o tsv)
+          echo "::add-mask::$ENROLLMENT_API_SERVICEACCOUNT_NAME"
+
+          echo "acr_name=$ACR_NAME" >> $GITHUB_OUTPUT
+          echo "app_config_endpoint=$APP_CONFIG_ENDPOINT" >> $GITHUB_OUTPUT
+          echo "aks_cluster_name=$AKS_CLUSTER_NAME" >> $GITHUB_OUTPUT
+          echo "enrollment_app_namespace=$ENROLLMENT_APP_NAMESPACE" >> $GITHUB_OUTPUT
+          echo "enrollment_api_serviceaccount_name=$ENROLLMENT_API_SERVICEACCOUNT_NAME" >> $GITHUB_OUTPUT
+
+    - name: Build and Upload Enrollment.Api Image
+      env:
+        IMAGE_TAG: "v1.0.${{ github.run_number }}"
+        IMAGE_NAME: "enrollmentapi"
+        ACR_NAME: ${{ steps.get_deployment_outpots.outputs.acr_name }}
+      run: |
+        echo "ACR NAME ${{ env.ACR_NAME }}"
+        az acr build --registry ${{ env.ACR_NAME }} --image ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image ${{ env.IMAGE_NAME }}:latest --file ./Enrollment.Api/Dockerfile .
+
+    - name: Get AKS Credentials
+      env:
+        RESOURCE_GROUP: ${{ secrets.AZURE_RG_ENROLLMENT_AKS }}
+        AKS_CLUSTER_NAME: ${{ steps.get_deployment_outpots.outputs.aks_cluster_name }}
+      run: |
+        az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }}
+
+    - name: Deploy Manifext
+      env:
+        ACR_NAME: ${{ steps.get_deployment_outpots.outputs.acr_name }}
+        APP_CONFIG_ENDPOINT: ${{ steps.get_deployment_outpots.outputs.app_config_endpoint }}
+        IMAGE_TAG: "v1.0.${{ github.run_number }}"
+        ENROLLMENT_APP_NAMESPACE: ${{ steps.get_deployment_outpots.outputs.enrollment_app_namespace }}
+        ENROLLMENT_API_SERVICEACCOUNT_NAME: ${{ steps.get_deployment_outpots.outputs.enrollment_api_serviceaccount_name }}
+      run: |
+        sed -e "s|ACR_NAME|${{ env.ACR_NAME }}|g" \
+        -e "s|APP_CONFIG_ENDPOINT|${{ env.APP_CONFIG_ENDPOINT }}|g" \
+        -e "s|IMAGE_TAG|${{ env.IMAGE_TAG }}|g" \
+        -e "s|ENROLLMENT_API_SERVICEACCOUNT_NAME|${{ env.ENROLLMENT_API_SERVICEACCOUNT_NAME }}|g" \
+        -e "s|ENROLLMENT_APP_NAMESPACE|${{ env.ENROLLMENT_APP_NAMESPACE }}|g" \
+        infrastructure/aks/api-deployment.yaml | kubectl apply -f - -n ${{ env.ENROLLMENT_APP_NAMESPACE }}
+
+  deploy-bsl-service:
+    name: Deploy BSL Service
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'BpsLogicBuilder'
+    permissions:
+      id-token: write
+      contents: read
+    needs: test
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+      with:
+        client-id: ${{ secrets.ARM_DEPLOYER_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Get Deployment Outputs
+      id: get_deployment_outpots
+      env:
+        RESOURCE_GROUP: ${{ secrets.AZURE_RG_ENROLLMENT_AKS }}
+      run: |
+          ACR_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.acrName.value -o tsv)
+          echo "::add-mask::$ACR_NAME"
+
+          APP_CONFIG_ENDPOINT=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.appConfigurationEndPoint.value -o tsv)
+          echo "::add-mask::$APP_CONFIG_ENDPOINT"
+
+          AKS_CLUSTER_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.aksClusterName.value -o tsv)
+          echo "::add-mask::$AKS_CLUSTER_NAME"
+
+          ENROLLMENT_APP_NAMESPACE=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.kubernetesNamespace.value -o tsv)
+          echo "::add-mask::$ENROLLMENT_APP_NAMESPACE"
+
+          ENROLLMENT_BSL_SERVICEACCOUNT_NAME=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.enrollmentBslServiceAccountName.value -o tsv)
+          echo "enrollment_bsl_serviceaccount_name=$ENROLLMENT_BSL_SERVICEACCOUNT_NAME" >> $GITHUB_OUTPUT
+
+          EXPECTED_CERTIFICATE_THUMBPRINT=$(az deployment group show --resource-group ${{ env.RESOURCE_GROUP }} --name main --query properties.outputs.enrollmentBslCertificateThumbprint.value -o tsv)
+          echo "::add-mask::$EXPECTED_CERTIFICATE_THUMBPRINT"
+
+          echo "acr_name=$ACR_NAME" >> $GITHUB_OUTPUT
+          echo "app_config_endpoint=$APP_CONFIG_ENDPOINT" >> $GITHUB_OUTPUT
+          echo "aks_cluster_name=$AKS_CLUSTER_NAME" >> $GITHUB_OUTPUT
+          echo "enrollment_app_namespace=$ENROLLMENT_APP_NAMESPACE" >> $GITHUB_OUTPUT
+          echo "expected_certificate_thumbprint=$EXPECTED_CERTIFICATE_THUMBPRINT" >> $GITHUB_OUTPUT
+
+    - name: Build and Upload Enrollment.Bsl Image
+      env:
+        IMAGE_TAG: "v1.0.${{ github.run_number }}"
+        IMAGE_NAME: "enrollmentbsl"
+        ACR_NAME: ${{ steps.get_deployment_outpots.outputs.acr_name }}
+      run: |
+        echo "ACR NAME ${{ env.ACR_NAME }}"
+        az acr build --registry ${{ env.ACR_NAME }} --image ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} --image ${{ env.IMAGE_NAME }}:latest --file ./Enrollment.Bsl/Dockerfile .
+
+    - name: Get AKS Credentials
+      env:
+        RESOURCE_GROUP: ${{ secrets.AZURE_RG_ENROLLMENT_AKS }}
+        AKS_CLUSTER_NAME: ${{ steps.get_deployment_outpots.outputs.aks_cluster_name }}
+      run: |
+        az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }}
+
+    - name: Deploy Manifext
+      env:
+        ACR_NAME: ${{ steps.get_deployment_outpots.outputs.acr_name }}
+        APP_CONFIG_ENDPOINT: ${{ steps.get_deployment_outpots.outputs.app_config_endpoint }}
+        IMAGE_TAG: "v1.0.${{ github.run_number }}"
+        ENROLLMENT_BSL_SERVICEACCOUNT_NAME: ${{ steps.get_deployment_outpots.outputs.enrollment_bsl_serviceaccount_name }}
+        ENROLLMENT_APP_NAMESPACE: ${{ steps.get_deployment_outpots.outputs.enrollment_app_namespace }}
+        EXPECTED_CERTIFICATE_THUMBPRINT: ${{ steps.get_deployment_outpots.outputs.expected_certificate_thumbprint }}
+      run: |
+        sed -e "s|ACR_NAME|${{ env.ACR_NAME }}|g" \
+        -e "s|APP_CONFIG_ENDPOINT|${{ env.APP_CONFIG_ENDPOINT }}|g" \
+        -e "s|IMAGE_TAG|${{ env.IMAGE_TAG }}|g" \
+        -e "s|EXPECTED_CERTIFICATE_THUMBPRINT|${{ env.EXPECTED_CERTIFICATE_THUMBPRINT }}|g" \
+        -e "s|ENROLLMENT_BSL_SERVICEACCOUNT_NAME|${{ env.ENROLLMENT_BSL_SERVICEACCOUNT_NAME }}|g" \
+        -e "s|ENROLLMENT_APP_NAMESPACE|${{ env.ENROLLMENT_APP_NAMESPACE }}|g" \
+        infrastructure/aks/bsl-deployment.yaml | kubectl apply -f - -n ${{ env.ENROLLMENT_APP_NAMESPACE }}
