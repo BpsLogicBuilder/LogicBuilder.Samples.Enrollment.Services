@@ -1,3 +1,4 @@
+* 2026-09-28 - AB#212: Update certificate name.
 * 2026-09-28 - AB#212: Add AKS CD workflow.
 * 2026-09-27 - AB#211: Add CD workflow.
 * 2026-09-03 - AB#223: Refactor - move methods to shared library.

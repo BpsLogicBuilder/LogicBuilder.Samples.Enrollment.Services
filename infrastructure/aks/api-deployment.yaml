@@ -37,7 +37,7 @@ spec:
               name: app-secrets
               key: keyVaultUrl
         - name: bslCertificateName
-          value: "frontend-client-cert"
+          value: "front-end-cert"
         - name: AllowedOrigins__0
           value: "*"
         envFrom:
