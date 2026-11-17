@@ -1,4 +1,7 @@
-﻿using LogicBuilder.App.Utils.Json;
+﻿using Enrollment.Bsl;
+using Enrollment.Domain.Entities;
+using LogicBuilder.App.Bsl.Business.Responses;
+using LogicBuilder.App.Utils.Json;
 using LogicBuilder.Domain.Json;
 using LogicBuilder.Expressions.Utils.Json;
 using Microsoft.AspNetCore.Authentication.Certificate;
@@ -36,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     options.JsonSerializerOptions.Converters.Add(new DescriptorConverter());
                     options.JsonSerializerOptions.Converters.Add(new ModelConverter());
-                    options.JsonSerializerOptions.Converters.Add(new ObjectConverter());
+                    options.JsonSerializerOptions.Converters.Add(new ObjectConverter(typeof(WeatherForecast).Assembly, typeof(DescriptorConverter).Assembly, typeof(UserModel).Assembly, typeof(GetListResponse).Assembly));
                 }
             );
 

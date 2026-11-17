@@ -1,4 +1,5 @@
 using Azure.Identity;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Azure.Security.KeyVault.Certificates;
 using Enrollment.Api;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,7 @@ builder.Services.AddCors(options =>
         }
     });
 });
+builder.Services.AddOpenTelemetry().UseAzureMonitor();
 builder.Services.AddControllers().AddJsonOptions
 (
     options =>
@@ -65,6 +67,8 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseCors(SecureCorsPolicy);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

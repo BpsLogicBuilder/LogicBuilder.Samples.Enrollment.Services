@@ -9,9 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.9.1" />
+		<PackageReference Include="AutoMapper" Version="16.3.0" />
+		<PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.5.0" />
+		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.10.0" />
 		<PackageReference Include="LogicBuilder.App.Bsl.Business" Version="1.0.3" />
-		<PackageReference Include="LogicBuilder.App.Utils" Version="1.0.7" />
+		<PackageReference Include="LogicBuilder.App.Utils" Version="1.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.1-preview.1" />
   </ItemGroup>
 
