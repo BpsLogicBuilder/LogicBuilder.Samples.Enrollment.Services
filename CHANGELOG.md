@@ -1,3 +1,4 @@
+* 2026-11-17 - AB#270: Turn on Application Insights.
 * 2026-09-28 - AB#212: Update certificate name.
 * 2026-09-28 - AB#212: Add AKS CD workflow.
 * 2026-09-27 - AB#211: Add CD workflow.

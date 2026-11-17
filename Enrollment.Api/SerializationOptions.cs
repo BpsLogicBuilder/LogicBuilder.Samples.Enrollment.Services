@@ -1,4 +1,6 @@
-﻿using LogicBuilder.App.Utils.Json;
+﻿using Enrollment.Domain.Entities;
+using LogicBuilder.App.Bsl.Business.Responses;
+using LogicBuilder.App.Utils.Json;
 using LogicBuilder.Domain.Json;
 using LogicBuilder.Expressions.Utils.Json;
 using System.Text.Json;
@@ -19,7 +21,7 @@ namespace Enrollment.Api
 
                 options.Converters.Add(new DescriptorConverter());
                 options.Converters.Add(new ModelConverter());
-                options.Converters.Add(new ObjectConverter());
+                options.Converters.Add(new ObjectConverter(typeof(WeatherForecast).Assembly, typeof(DescriptorConverter).Assembly, typeof(UserModel).Assembly, typeof(GetListResponse).Assembly));
 
                 _default = options;
 
